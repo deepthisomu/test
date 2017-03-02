@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application guid="NEW_EP" version="1.0">
+  <display categories="User Processes" name="new ep"/>
+  <creation authors="eStudio" date="02-03-2017 12:27:55"/>
+  <deployment label="Development"/>
+  <service-instances>
+    <inst name="FIXAcceptor1">
+      <service guid="FIXAcceptor" version="4.0"/>
+      <short-description>FIXAcceptor is a FIX engine to receive FIX messages</short-description>
+      <deployment nodes="fps"/>
+      <execution>
+        <debug enabled="false" port="5000"/>
+        <launch type="1"/>
+        <connection-factory-properties/>
+        <timevalue timevalue="0"/>
+      </execution>
+      <outputport-instances>
+        <outputport-instance name="ON_EXCEPTION">
+          <description>Used as an Exception Port</description>
+          <workflow type="1"/>
+          <schema root="{http://www.fiorano.com/fesb/activity/fault}Error">
+            <file>ON_EXCEPTION.xsd</file>
+          </schema>
+          <jms>
+            <destination/>
+            <authentication/>
+            <publisher>
+              <messages persistent="true"/>
+            </publisher>
+          </jms>
+        </outputport-instance>
+      </outputport-instances>
+      <logmanager logger="java.util.logging.FileHandler">
+        <Param name="java.util.logging.FileHandler.limit">50000</Param>
+        <Param name="java.util.logging.FileHandler.dir">logs</Param>
+        <Param name="java.util.logging.FileHandler.count">4</Param>
+        <Param name="fiorano.jms.log2.def.DefaultFormatter.includetimestamp">true</Param>
+        <Param name="fiorano.jms.log2.def.DefaultFormatter.dateformat">MM/dd/yyyy HH:mm:ss</Param>
+      </logmanager>
+      <logmodules>
+        <logmodule level="WARNING" name="com.fiorano.services.fixacceptor.FIXAcceptorService" uniqueNameRequired="true"/>
+        <logmodule level="WARNING" name="com.fiorano.services.fixacceptor.transport.jms" uniqueNameRequired="true"/>
+        <logmodule level="WARNING" name="com.fiorano.services.fixacceptor.engine" uniqueNameRequired="true"/>
+        <logmodule level="WARNING" name="ERR_HANDLER" uniqueNameRequired="true"/>
+        <logmodule level="INFO" name="OUT_HANDLER" uniqueNameRequired="true"/>
+      </logmodules>
+      <runtime-arguments>
+        <runtime-argument inmemory="true" mandatory="false" name="JVM_PARAMS" type="java.lang.String">
+          <value> -client -DLOG_TO_STREAM=true -Xrs</value>
+        </runtime-argument>
+        <runtime-argument inmemory="false" mandatory="false" name="JAVA_HOME"/>
+      </runtime-arguments>
+    </inst>
+  </service-instances>
+  <routes/>
+</application>
